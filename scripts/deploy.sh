@@ -20,7 +20,7 @@ fi
 
 # Insert the actual public IP into the config
 sed "s/YOUR_PUBLIC_IP/$PUBLIC_IP/g" \
-  ~/mhfz/config/config.json \
+  /opt/mhfz-deployment/config/config.json \
   > ~/mhfz/erupe/docker/config.json
 
 # Download the permanent game binaries from S3
