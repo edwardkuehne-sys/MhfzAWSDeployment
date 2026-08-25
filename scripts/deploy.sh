@@ -8,10 +8,9 @@ echo "=== Cloning Erupe ==="
 git clone https://github.com/Mezeporta/Erupe.git ~/mhfz/erupe
 
 echo "=== Configuring Erupe ==="
-# Edit in the docker-compose yaml to build images locally
+# Replace their server image with my own
 sed -i '/^[[:space:]]*image: ghcr.io\/mezeporta\/erupe:main$/c\
-    build:\
-      context: ../' ~/mhfz/erupe/docker/docker-compose.yml
+    image: anononetwothree/mhfz-erupe:latest' ~/mhfz/erupe/docker/docker-compose.yml
 
 echo "=== Extracting MHFZ binaries ==="
 # Download the permanent game binaries from S3
@@ -22,10 +21,10 @@ aws s3 cp s3://my-mhfz-server-data/MHFZbinaries.7z /tmp/
 # Cleanup
 rm /tmp/MHFZbinaries.7z
 
-echo "=== Building Erupe ==="
+echo "=== Starting Containers ==="
 # Start Erupe
 cd ~/mhfz/erupe/docker
-docker compose up --build
+docker compose up 
 
 echo "=== Container status ==="
 docker compose ps
