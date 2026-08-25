@@ -138,7 +138,6 @@ Resources:
           apt-get install -y git
           
           # Clone Erupe and own Repository
-          git clone https://github.com/Mezeporta/Erupe.git ~/mhfz/erupe
           git clone https://github.com/edwardkuehne-sys/MhfzAWSDeployment.git /opt/mhfz-deployment
 
           chmod +x /opt/mhfz-deployment/scripts/bootstrap.sh

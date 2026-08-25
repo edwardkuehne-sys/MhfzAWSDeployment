@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+git clone https://github.com/Mezeporta/Erupe.git ~/mhfz/erupe
+
 # Edit in the docker-compose yaml to build images locally
 sed -i '/^[[:space:]]*image: ghcr.io\/mezeporta\/erupe:main$/c\
     build:\
