@@ -133,7 +133,7 @@ Resources:
 
           systemctl enable --now docker
 
-          curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
+          curl -fL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
           -o /usr/local/bin/docker-compose
 
           chmod +x /usr/local/bin/docker-compose
@@ -143,9 +143,7 @@ Resources:
           mkdir -p /home/admin/mhfz
           chown -R admin:admin /home/admin/mhfz
 
-          sudo -u admin git clone --no-checkout \
-          https://github.com/mygithub/my-mhfz-deployment.git \
-          /home/admin/mhfz/deployment
+          sudo -u admin git clone --no-checkout https://github.com/edwardkuehne-sys/MhfzAWSDeployment.git /home/admin/mhfz/deployment
 
           sudo -u admin git -C /home/admin/mhfz/deployment sparse-checkout init --cone
           sudo -u admin git -C /home/admin/mhfz/deployment sparse-checkout set config scripts

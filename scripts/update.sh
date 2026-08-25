@@ -16,7 +16,7 @@ if [ -z "$PUBLIC_IP" ]; then
 fi
 
 # Download configuration and insert current IP
-curl -L https://myrepo/config.json \
+curl -L "https://raw.githubusercontent.com/edwardkuehne-sys/MhfzAWSDeployment/refs/heads/main/config/config.json" \
   -o /tmp/config.json
 
 sed "s/YOUR_PUBLIC_IP/$PUBLIC_IP/g" \
