@@ -1,5 +1,6 @@
 {
-  "Host": "YOUR_PUBLIC_IP",
+  "Host": "",
+  "BinPath": "bin",
   "Language": "en",
   "DeleteOnSaveCorruption": false,
   "DisableSaveIntegrityCheck": false,
