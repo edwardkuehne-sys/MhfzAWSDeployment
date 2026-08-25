@@ -3,7 +3,6 @@
 apt-get update
 apt-get install -y ca-certificates curl awscli 7zip
 
-# Add Docker's official GPG key
 install -m 0755 -d /etc/apt/keyrings
 
 curl -fsSL https://download.docker.com/linux/debian/gpg \
@@ -11,19 +10,11 @@ curl -fsSL https://download.docker.com/linux/debian/gpg \
 
 chmod a+r /etc/apt/keyrings/docker.asc
 
-# Add Docker repository
-echo \
-  "Types: deb
-  URIs: https://download.docker.com/linux/debian
-  Suites: trixie
-  Components: stable
-  Architectures: $(dpkg --print-architecture)
-  Signed-By: /etc/apt/keyrings/docker.asc" \
-  > /etc/apt/sources.list.d/docker.sources
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian trixie stable" \
+  > /etc/apt/sources.list.d/docker.list
 
 apt-get update
 
-# Install Docker + Buildx + Compose
 apt-get install -y \
   docker-ce \
   docker-ce-cli \
