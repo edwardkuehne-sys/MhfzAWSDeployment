@@ -1,0 +1,193 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Simple Erupe Monster Hunter Frontier server deployment.
+  EC2 runs Docker Compose with Erupe and PostgreSQL.
+
+Parameters:
+  # Latest Debian Image
+  DebianAMI:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/debian/release/13/latest/amd64
+  MhfzDataBucketName:
+    Type: String
+    Default: my-mhfz-server-data
+
+Resources:
+  # 1. VPC
+  MhfzVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: MhfzVPC
+
+  # 2. Internet Gateway
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: MhfzInternetGateway
+  
+  # 3. Attach Gateway to VPC
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref MhfzVPC
+
+  # 4. Public Subnet
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MhfzVPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: eu-west-1a
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: PublicSubnet
+
+  # 5. Route table
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MhfzVPC
+  
+  # 6. Route traffic through Gateway
+  DefaultRoute:
+    Type: AWS::EC2::Route
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+  
+  # 7. Associate subnet with route table
+  PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
+
+  # 8. Security group
+  WebSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: MHFZ Server Access
+      VpcId: !Ref MhfzVPC
+
+      SecurityGroupIngress:
+        # Horrible SSH Solution
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 212.100.44.146/32
+
+        # MHFZ Sign V1
+        - IpProtocol: tcp
+          FromPort: 53312
+          ToPort: 53312
+          CidrIp: 0.0.0.0/0
+
+        # MHFZ Sign V2
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+
+        # MHFZ Entrance
+        - IpProtocol: tcp
+          FromPort: 53310
+          ToPort: 53310
+          CidrIp: 0.0.0.0/0
+
+        # MHFZ Channels
+        - IpProtocol: tcp
+          FromPort: 54001
+          ToPort: 54008
+          CidrIp: 0.0.0.0/0
+
+  # 9. EC2 instance
+  MhfzServer: 
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.micro
+      ImageId: !Ref DebianAMI
+      SubnetId: !Ref PublicSubnet
+      SecurityGroupIds:
+        - !Ref WebSecurityGroup
+      KeyName: MhfzKeyPair
+
+      IamInstanceProfile: !Ref MhfzInstanceProfile
+
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+
+          apt-get update
+          apt-get install -y docker.io git awscli 7zip curl
+
+          systemctl enable --now docker
+
+          curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
+          -o /usr/local/bin/docker-compose
+
+          chmod +x /usr/local/bin/docker-compose
+
+          usermod -aG docker admin
+
+          mkdir -p /home/admin/mhfz
+          chown -R admin:admin /home/admin/mhfz
+
+          sudo -u admin git clone --no-checkout \
+          https://github.com/mygithub/my-mhfz-deployment.git \
+          /home/admin/mhfz/deployment
+
+          sudo -u admin git -C /home/admin/mhfz/deployment sparse-checkout init --cone
+          sudo -u admin git -C /home/admin/mhfz/deployment sparse-checkout set config scripts
+          sudo -u admin git -C /home/admin/mhfz/deployment checkout
+
+          sudo -u admin chmod +x /home/admin/mhfz/deployment/scripts/*.sh
+
+          sudo -u admin sg docker -c '/home/admin/mhfz/deployment/scripts/deploy.sh'
+  
+  # 10.1 Server Role to access the bucket
+  MhfzServerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+
+      Policies:
+        - PolicyName: MhfzS3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                - s3:ListBucket
+                Resource: !Sub 'arn:aws:s3:::${MhfzDataBucketName}'
+
+              - Effect: Allow
+                Action:
+                - s3:GetObject
+                - s3:PutObject
+                Resource: !Sub 'arn:aws:s3:::${MhfzDataBucketName}/*'
+  
+  # 10.2 Instance Profile
+  MhfzInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref MhfzServerRole

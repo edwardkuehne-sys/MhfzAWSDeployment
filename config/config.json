@@ -1,0 +1,201 @@
+{
+  "Host": "YOUR_PUBLIC_IP",
+  "Language": "en",
+  "DeleteOnSaveCorruption": false,
+  "DisableSaveIntegrityCheck": false,
+  "ClientMode": "ZZ",
+  "CommandPrefix": "!",
+  "AutoCreateAccount": true,
+  "SaveDumps": {
+    "Enabled": true,
+    "RawEnabled": false,
+    "OutputDir": "save-backups"
+  },
+  "GameplayOptions": {
+    "MinFeatureWeapons": 1,
+    "MaxFeatureWeapons": 3,
+    "MaximumNP": 999999,
+    "MaximumRP": 999999,
+    "MaximumFP": 999999,
+    "TreasureHuntExpiry": 604800,
+    "DisableLoginBoost": false,
+    "DisableBoostTime": false,
+    "BoostTimeDuration": 14400,
+    "ClanMealDuration": 3600,
+    "ClanMemberLimits": [[0, 60], [1, 60], [2, 60], [3, 60]],
+    "BonusQuestAllowance": 5,
+    "DailyQuestAllowance": 3,
+    "LowLatencyRaviente": false,
+    "RegularRavienteMaxPlayers": 8,
+    "ViolentRavienteMaxPlayers": 8,
+    "BerserkRavienteMaxPlayers": 32,
+    "ExtremeRavienteMaxPlayers": 32,
+    "SmallBerserkRavienteMaxPlayers": 8,
+    "GUrgentRate": 0.25,
+    "GCPMultiplier": 3.00,
+    "HRPMultiplier": 3.00,
+    "HRPMultiplierNC": 3.00,
+    "SRPMultiplier": 3.00,
+    "SRPMultiplierNC": 3.00,
+    "GRPMultiplier": 3.00,
+    "GRPMultiplierNC": 3.00,
+    "GSRPMultiplier": 3.00,
+    "GSRPMultiplierNC": 3.00,
+    "ZennyMultiplier": 4.00,
+    "ZennyMultiplierNC": 4.00,
+    "GZennyMultiplier": 4.00,
+    "GZennyMultiplierNC": 4.00,
+    "MaterialMultiplier": 1.00,
+    "MaterialMultiplierNC": 2.00,
+    "GMaterialMultiplier": 2.00,
+    "GMaterialMultiplierNC": 2.00,
+    "ExtraCarves": 1,
+    "ExtraCarvesNC": 1,
+    "GExtraCarves": 1,
+    "GExtraCarvesNC": 1,
+    "DisableHunterNavi": false,
+    "MezFesSoloTickets": 5,
+    "MezFesGroupTickets": 1,
+    "MezFesDuration": 172800,
+    "MezFesSwitchMinigame": false,
+    "EnableKaijiEvent": false,
+    "EnableHiganjimaEvent": false,
+    "EnableNierEvent": true,
+    "DisableRoad": false,
+    "SeasonOverride": false
+  },
+  "Commands": [
+    {
+      "Name": "Help",
+      "Enabled": true,
+      "Description": "Show enabled chat commands",
+      "Prefix": "help"
+    }, {
+      "Name": "Rights",
+      "Enabled": false,
+      "Description": "Overwrite the Rights value on your account",
+      "Prefix": "rights"
+    }, {
+      "Name": "Raviente",
+      "Enabled": true,
+      "Description": "Various Raviente siege commands",
+      "Prefix": "ravi"
+    }, {
+      "Name": "Teleport",
+      "Enabled": false,
+      "Description": "Teleport to specified coordinates",
+      "Prefix": "tele"
+    }, {
+      "Name": "Reload",
+      "Enabled": true,
+      "Description": "Reload all players in your Land",
+      "Prefix": "reload"
+    }, {
+      "Name": "KeyQuest",
+      "Enabled": false,
+      "Description": "Overwrite your HR Key Quest progress",
+      "Prefix": "kqf"
+    }, {
+      "Name": "Course",
+      "Enabled": true,
+      "Description": "Toggle Courses on your account",
+      "Prefix": "course"
+    }, {
+      "Name": "PSN",
+      "Enabled": false,
+      "Description": "Link a PlayStation Network ID to your account",
+      "Prefix": "psn"
+    }, {
+      "Name": "Discord",
+      "Enabled": false,
+      "Description": "Generate a token to link your Discord account",
+      "Prefix": "discord"
+    }, {
+      "Name": "Ban",
+      "Enabled": false,
+      "Description": "Ban/Temp Ban a user",
+      "Prefix": "ban"
+    }, {
+      "Name": "Timer",
+      "Enabled": true,
+      "Description": "Toggle the Quest timer",
+      "Prefix": "timer"
+    }, {
+      "Name": "Playtime",
+      "Enabled": true,
+      "Description": "Show your playtime",
+      "Prefix": "playtime"
+    }, {
+      "Name": "Language",
+      "Enabled": true,
+      "Description": "Show or change your preferred language (en|jp|fr|es|zh)",
+      "Prefix": "lang"
+    }
+  ],
+  "Courses": [
+    {"Name": "HunterLife", "Enabled": false},
+    {"Name": "Extra", "Enabled": false},
+    {"Name": "Premium", "Enabled": false},
+    {"Name": "Assist", "Enabled": false},
+    {"Name": "N", "Enabled": false},
+    {"Name": "Hiden", "Enabled": false},
+    {"Name": "HunterSupport", "Enabled": false},
+    {"Name": "NBoost", "Enabled": false},
+    {"Name": "NetCafe", "Enabled": false},
+    {"Name": "HLRenewing", "Enabled": false},
+    {"Name": "EXRenewing", "Enabled": false}
+  ],
+  "Database": {
+    "Host": "db",
+    "Port": 5432,
+    "User": "postgres",
+    "Password": "password",
+    "Database": "erupe"
+  },
+  "Sign": {
+    "Enabled": true,
+    "Port": 53312
+  },
+  "Channel": {
+    "Enabled": true
+  },
+  "Entrance": {
+    "Enabled": true,
+    "Port": 53310,
+    "Entries": [
+      {
+        "Name": "Newbie", "Description": "", "IP": "", "Type": 3, "Recommended": 2, "AllowedClientFlags": 0,
+        "Channels": [
+          { "Port": 54001, "MaxPlayers": 100, "Enabled": true },
+          { "Port": 54002, "MaxPlayers": 100, "Enabled": true }
+        ]
+      }, {
+        "Name": "Normal", "Description": "", "IP": "", "Type": 1, "Recommended": 0, "AllowedClientFlags": 0,
+        "Channels": [
+          { "Port": 54003, "MaxPlayers": 100, "Enabled": true },
+          { "Port": 54004, "MaxPlayers": 100, "Enabled": true }
+        ]
+      }, {
+        "Name": "Cities", "Description": "", "IP": "", "Type": 2, "Recommended": 0, "AllowedClientFlags": 0,
+        "Channels": [
+          { "Port": 54005, "MaxPlayers": 100, "Enabled": true }
+        ]
+      }, {
+        "Name": "Tavern", "Description": "", "IP": "", "Type": 4, "Recommended": 0, "AllowedClientFlags": 0,
+        "Channels": [
+          { "Port": 54006, "MaxPlayers": 100, "Enabled": true }
+        ]
+      }, {
+        "Name": "Return", "Description": "", "IP": "", "Type": 5, "Recommended": 0, "AllowedClientFlags": 0,
+        "Channels": [
+          { "Port": 54007, "MaxPlayers": 100, "Enabled": true }
+        ]
+      }, {
+        "Name": "MezFes", "Description": "", "IP": "", "Type": 6, "Recommended": 6, "AllowedClientFlags": 0,
+        "Channels": [
+          { "Port": 54008, "MaxPlayers": 100, "Enabled": true }
+        ]
+      }
+    ]
+  }
+}
