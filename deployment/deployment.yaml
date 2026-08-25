@@ -115,7 +115,7 @@ Resources:
   MhfzServer: 
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t3.micro
+      InstanceType: t3.small
       ImageId: !Ref DebianAMI
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
