@@ -117,11 +117,17 @@ Resources:
     Properties:
       InstanceType: t3.micro
       ImageId: !Ref DebianAMI
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 20
+            VolumeType: gp3
+            DeleteOnTermination: true
       SubnetId: !Ref PublicSubnet
       SecurityGroupIds:
         - !Ref WebSecurityGroup
       KeyName: MhfzKeyPair
-
+      
       IamInstanceProfile: !Ref MhfzInstanceProfile
 
       UserData:
@@ -130,7 +136,9 @@ Resources:
 
           apt-get update
           apt-get install -y git
-
+          
+          # Clone Erupe and own Repository
+          git clone https://github.com/Mezeporta/Erupe.git ~/mhfz/erupe
           git clone https://github.com/edwardkuehne-sys/MhfzAWSDeployment.git /opt/mhfz-deployment
 
           chmod +x /opt/mhfz-deployment/scripts/bootstrap.sh
