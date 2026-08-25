@@ -13,7 +13,20 @@ sed -i '/^[[:space:]]*image: ghcr.io\/mezeporta\/erupe:main$/c\
     image: anononetwothree/mhfz-erupe:latest' ~/mhfz/erupe/docker/docker-compose.yml
 
 echo "=== Setting up Config ==="
-cp /opt/mhfz-deployment/config/config.json ~/mhfz/erupe/docker/config.json
+TOKEN=$(curl -sS --fail \
+  -X PUT \
+  -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" \
+  http://169.254.169.254/latest/api/token)
+
+PUBLIC_IP=$(curl -sS --fail \
+  -H "X-aws-ec2-metadata-token: $TOKEN" \
+  http://169.254.169.254/latest/meta-data/public-ipv4)
+
+echo "Public IPv4: $PUBLIC_IP"
+# Inserting the instance's public IPv4 into the config
+sed "s/PUBLIC_IP/$PUBLIC_IP/g" \
+  /opt/mhfz-deployment/config/config.json \
+  > ~/mhfz/erupe/docker/config.json
 
 echo "=== Extracting MHFZ binaries ==="
 # Download the permanent game binaries from S3
