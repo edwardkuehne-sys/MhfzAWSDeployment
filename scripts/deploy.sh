@@ -4,6 +4,13 @@ set -e
 # Clone Erupe
 git clone https://github.com/Mezeporta/Erupe.git ~/mhfz/erupe
 
+# Building images locally
+sed -i 's|image: ghcr.io/Mezeporta/Erupe:main|# image: ghcr.io/Mezeporta/Erupe:main|' \
+  ~/mhfz/erupe/docker/docker-compose.yml
+
+sed -i '/# image: ghcr.io\/Mezeporta\/Erupe:main/a\    build:\n      context: ..' \
+  ~/mhfz/erupe/docker/docker-compose.yml
+
 # Get the EC2 instance's public IPv4 address
 TOKEN=$(curl -sX PUT \
   "http://169.254.169.254/latest/api/token" \
@@ -33,4 +40,4 @@ rm /tmp/MHFZbinaries.7z
 
 # Start Erupe
 cd ~/mhfz/erupe/docker
-docker-compose up -d
+docker compose up -d
