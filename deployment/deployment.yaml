@@ -134,6 +134,10 @@ Resources:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
 
+          exec > >(tee -a /var/log/mhfz-userdata.log | logger -t mhfz-userdata -s 2>/dev/console) 2>&1
+          
+          echo "=== MHFZ UserData started ==="
+          date
           apt-get update
           apt-get install -y git
           
@@ -143,6 +147,9 @@ Resources:
           chmod +x /opt/mhfz-deployment/scripts/bootstrap.sh
 
           /opt/mhfz-deployment/scripts/bootstrap.sh
+
+          echo "=== MHFZ UserData completed successfully ==="
+          date
   
   # 10.1 Server Role to access the bucket
   MhfzServerRole:

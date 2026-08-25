@@ -1,5 +1,9 @@
 #!/bin/bash -xe
 
+exec > >(tee -a /var/log/mhfz-bootstrap.log | logger -t mhfz-bootstrap -s 2>/dev/console) 2>&1
+
+echo "=== Bootstrap started ==="
+date
 apt-get update
 apt-get install -y ca-certificates curl awscli 7zip
 
@@ -15,6 +19,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 
 apt-get update
 
+echo "=== Installing Docker ==="
 apt-get install -y \
   docker-ce \
   docker-ce-cli \
@@ -26,10 +31,15 @@ systemctl enable --now docker
 
 usermod -aG docker admin
 
+echo "=== Creating MHFZ directories ==="
 mkdir -p /home/admin/mhfz
 chown -R admin:admin /home/admin/mhfz
 
 chmod +x /opt/mhfz-deployment/scripts/*.sh
 
+echo "=== Starting deployment ==="
 sudo -u admin sg docker -c \
   '/opt/mhfz-deployment/scripts/deploy.sh'
+
+echo "=== Bootstrap completed successfully ==="
+date
