@@ -26,7 +26,7 @@ sed "s/YOUR_PUBLIC_IP/$PUBLIC_IP/g" \
 # Download the permanent game binaries from S3
 aws s3 cp s3://my-mhfz-server-data/MHFZbinaries.7z /tmp/
 7z x /tmp/MHFZbinaries.7z \
-  -o/home/admin/mhfz/erupe/docker/bin/
+  -o/home/admin/mhfz/erupe/docker/
 
 # Cleanup
 rm /tmp/MHFZbinaries.7z
