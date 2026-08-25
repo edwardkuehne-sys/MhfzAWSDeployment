@@ -129,29 +129,13 @@ Resources:
           #!/bin/bash -xe
 
           apt-get update
-          apt-get install -y docker.io git awscli 7zip curl
+          apt-get install -y git
 
-          systemctl enable --now docker
+          git clone https://github.com/edwardkuehne-sys/MhfzAWSDeployment.git /opt/mhfz-deployment
 
-          curl -fL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
-          -o /usr/local/bin/docker-compose
+          chmod +x /opt/mhfz-deployment/scripts/bootstrap.sh
 
-          chmod +x /usr/local/bin/docker-compose
-
-          usermod -aG docker admin
-
-          mkdir -p /home/admin/mhfz
-          chown -R admin:admin /home/admin/mhfz
-
-          sudo -u admin git clone --no-checkout https://github.com/edwardkuehne-sys/MhfzAWSDeployment.git /home/admin/mhfz/deployment
-
-          sudo -u admin git -C /home/admin/mhfz/deployment sparse-checkout init --cone
-          sudo -u admin git -C /home/admin/mhfz/deployment sparse-checkout set config scripts
-          sudo -u admin git -C /home/admin/mhfz/deployment checkout
-
-          sudo -u admin chmod +x /home/admin/mhfz/deployment/scripts/*.sh
-
-          sudo -u admin sg docker -c '/home/admin/mhfz/deployment/scripts/deploy.sh'
+          /opt/mhfz-deployment/scripts/bootstrap.sh
   
   # 10.1 Server Role to access the bucket
   MhfzServerRole:
