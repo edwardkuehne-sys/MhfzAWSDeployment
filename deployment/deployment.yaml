@@ -142,7 +142,7 @@ Resources:
           apt-get install -y git
           
           # Clone Erupe and own Repository
-          git clone https://github.com/edwardkuehne-sys/MhfzAWSDeployment.git /opt/mhfz-deployment
+          git clone https://github.com/ek-testlab/MhfzAWSDeployment.git /opt/mhfz-deployment
 
           chmod +x /opt/mhfz-deployment/scripts/bootstrap.sh
 
