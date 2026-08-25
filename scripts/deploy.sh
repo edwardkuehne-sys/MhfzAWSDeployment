@@ -12,6 +12,9 @@ echo "=== Configuring Erupe ==="
 sed -i '/^[[:space:]]*image: ghcr.io\/mezeporta\/erupe:main$/c\
     image: anononetwothree/mhfz-erupe:latest' ~/mhfz/erupe/docker/docker-compose.yml
 
+echo "=== Setting up Config ==="
+cp /opt/mhfz-deployment/config/config.json ~/mhfz/erupe/docker/config.json
+
 echo "=== Extracting MHFZ binaries ==="
 # Download the permanent game binaries from S3
 aws s3 cp s3://my-mhfz-server-data/MHFZbinaries.7z /tmp/
