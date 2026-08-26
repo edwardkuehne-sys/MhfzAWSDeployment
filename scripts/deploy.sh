@@ -5,12 +5,12 @@ echo "=== Deploy started ==="
 date
 
 echo "=== Cloning Erupe ==="
-git clone https://github.com/Mezeporta/Erupe.git ~/mhfz/erupe
+git clone --branch 9.3.1 --single-branch https://github.com/Mezeporta/Erupe.git ~/mhfz/erupe
 
 echo "=== Configuring Erupe ==="
 # Replace their server image with my own
 sed -i '/^[[:space:]]*image: ghcr.io\/mezeporta\/erupe:main$/c\
-    image: anononetwothree/mhfz-erupe:latest' ~/mhfz/erupe/docker/docker-compose.yml
+    image: anononetwothree/mhfz-erupe:9.3.1' ~/mhfz/erupe/docker/docker-compose.yml
 
 echo "=== Setting up Config ==="
 TOKEN=$(curl -sS --fail \
