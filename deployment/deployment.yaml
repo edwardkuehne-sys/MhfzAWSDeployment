@@ -187,3 +187,8 @@ Resources:
     Properties:
       Roles:
         - !Ref MhfzServerRole
+
+Outputs:
+  PublicIP:
+    Description: Public IP of the MHFZ Server for Ansible
+    Value: !GetAtt EC2Instance.PublicIp
