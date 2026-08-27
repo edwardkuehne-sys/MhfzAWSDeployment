@@ -5,7 +5,7 @@ echo "=== Deploy started ==="
 date
 
 echo "=== Cloning Erupe ==="
-git clone --branch v9.3.1 --single-branch https://github.com/Mezeporta/Erupe.git ~/mhfz/erupe
+git clone --branch v9.3.2 --single-branch https://github.com/Mezeporta/Erupe.git ~/mhfz/erupe
 
 echo "=== Configuring Erupe ==="
 # Replace their server image with my own
