@@ -1,5 +1,5 @@
 {
-  "Host": "",
+  "Host": "PUBLIC_IP",
   "BinPath": "bin",
   "Language": "en",
   "DeleteOnSaveCorruption": false,

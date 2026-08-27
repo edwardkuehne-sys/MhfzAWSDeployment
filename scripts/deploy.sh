@@ -13,8 +13,7 @@ sed -i '/^[[:space:]]*image: ghcr.io\/mezeporta\/erupe:main$/c\
     image: anononetwothree/mhfz-erupe:9.3.1' ~/mhfz/erupe/docker/docker-compose.yml
 
 echo "=== Setting up Config ==="
-TOKEN=$(curl -sS --fail \
-  -X PUT \
+TOKEN=$(curl -sS -X PUT \
   -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" \
   http://169.254.169.254/latest/api/token)
 
@@ -22,8 +21,8 @@ PUBLIC_IP=$(curl -sS --fail \
   -H "X-aws-ec2-metadata-token: $TOKEN" \
   http://169.254.169.254/latest/meta-data/public-ipv4)
 
-echo "Public IPv4: $PUBLIC_IP"
-# Inserting the instance's public IPv4 into the config
+echo "Public IPv4: [$PUBLIC_IP]"
+
 sed "s/PUBLIC_IP/$PUBLIC_IP/g" \
   /opt/mhfz-deployment/config/config.json \
   > ~/mhfz/erupe/docker/config.json
