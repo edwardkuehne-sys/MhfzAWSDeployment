@@ -1,5 +1,5 @@
 #!/bin/bash -xe
-
+#TODO add mhfz service to bootstrap
 exec > >(tee -a /var/log/mhfz-bootstrap.log | logger -t mhfz-bootstrap -s 2>/dev/console) 2>&1
 
 echo "=== Bootstrap started ==="
