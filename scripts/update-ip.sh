@@ -2,7 +2,7 @@
 
 set -e
 
-cd home/admin/mhfz/erupe/docker
+cd /home/admin/mhfz/erupe/docker
 
 # Stop Erupe containers
 docker compose down
