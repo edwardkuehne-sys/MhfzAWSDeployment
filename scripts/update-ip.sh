@@ -19,7 +19,8 @@ PUBLIC_IP=$(curl -sS \
 echo "Public IPv4: $PUBLIC_IP"
 
 # Update config
-sed -i "s/\"Host\": \"[^\"]*\"/\"Host\": \"$PUBLIC_IP\"/" config.json
+# TODO this hard coded value is bad if other user's configs look different
+sed -i '2s/"Host": "[^"]*"/"Host": "'"$PUBLIC_IP"'"/' config.json
 
 # Start Erupe with updated config
 docker compose up -d
