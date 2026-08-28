@@ -5,12 +5,14 @@ echo "=== Deploy started ==="
 date
 
 echo "=== Cloning Erupe ==="
-git clone --branch v9.3.2 --single-branch https://github.com/Mezeporta/Erupe.git ~/mhfz/erupe
+git clone https://github.com/Mezeporta/Erupe.git
+cd ~/mhfz/erupe
+git checkout 531b3d2fa6af9b102f775d1630360605abc0ac67
 
 echo "=== Configuring Erupe ==="
 # Replace their server image with my own
-sed -i '/^[[:space:]]*image: ghcr.io\/mezeporta\/erupe:main$/c\
-    image: anononetwothree/mhfz-erupe:9.3.1' ~/mhfz/erupe/docker/docker-compose.yml
+sed -i '/^    build:$/,+1c\
+    image: anononetwothree/mhfz-erupe:latest' ~/mhfz/erupe/docker/docker-compose.yml
 
 echo "=== Setting up Config ==="
 TOKEN=$(curl -sS -X PUT \
@@ -32,14 +34,19 @@ echo "=== Extracting MHFZ binaries ==="
 aws s3 cp s3://my-mhfz-server-data/MHFZbinaries.7z /tmp/
 7z x /tmp/MHFZbinaries.7z \
   -o/home/admin/mhfz/erupe/docker/
-
 # Cleanup
 rm /tmp/MHFZbinaries.7z
 
 echo "=== Starting Containers ==="
-# Start Erupe
 cd ~/mhfz/erupe/docker
-docker compose up 
+# Set restart policy
+yq -y -i '
+  .services |= with_entries(
+    .value.restart = "unless-stopped"
+  )
+' docker-compose.yml
+# Start Erupe
+docker compose up -d --force-recreate
 
 echo "=== Container status ==="
 docker compose ps

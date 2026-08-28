@@ -37,4 +37,4 @@ sudo docker compose up -d
 
 rm -f /tmp/mhfz-config.json
 
-echo "=== Deployment complete ==="
+echo "=== Update complete ==="

@@ -3,6 +3,7 @@ Description: >
   Simple Erupe Monster Hunter Frontier server deployment.
   EC2 runs Docker Compose with Erupe and PostgreSQL.
 
+#TODO finish parameterising EC2 size, EBS size, maybe keypairname, subnet AZ, Cidr IP for ssh
 Parameters:
   # Latest Debian Image
   DebianAMI:
@@ -120,7 +121,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
-            VolumeSize: 20
+            VolumeSize: 12
             VolumeType: gp3
             DeleteOnTermination: true
       SubnetId: !Ref PublicSubnet
@@ -146,6 +147,7 @@ Resources:
 
           chmod +x /opt/mhfz-deployment/scripts/bootstrap.sh
 
+          echo "=== Executing bootstrap script ==="
           /opt/mhfz-deployment/scripts/bootstrap.sh
 
           echo "=== MHFZ UserData completed successfully ==="

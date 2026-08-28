@@ -5,7 +5,7 @@ exec > >(tee -a /var/log/mhfz-bootstrap.log | logger -t mhfz-bootstrap -s 2>/dev
 echo "=== Bootstrap started ==="
 date
 apt-get update
-apt-get install -y ca-certificates curl awscli 7zip
+apt-get install -y ca-certificates curl awscli 7zip yq
 
 install -m 0755 -d /etc/apt/keyrings
 
@@ -19,7 +19,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 
 apt-get update
 
-echo "=== Installing Docker ==="
+echo "=== Installing docker ==="
 apt-get install -y \
   docker-ce \
   docker-ce-cli \
