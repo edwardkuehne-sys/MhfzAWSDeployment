@@ -5,7 +5,7 @@ echo "=== Deploy started ==="
 date
 
 echo "=== Cloning Erupe ==="
-git clone https://github.com/Mezeporta/Erupe.git
+git clone https://github.com/Mezeporta/Erupe.git ~/mhfz/erupe
 cd ~/mhfz/erupe
 git checkout 531b3d2fa6af9b102f775d1630360605abc0ac67
 
