@@ -35,6 +35,12 @@ echo "=== Creating MHFZ directories ==="
 mkdir -p /home/admin/mhfz
 chown -R admin:admin /home/admin/mhfz
 
+echo "=== Installing MHFZ systemd service ==="
+cp /opt/mhfz-deployment/scripts/erupe.service /etc/systemd/system/erupe.service
+
+systemctl daemon-reload
+systemctl enable erupe.service
+
 chmod +x /opt/mhfz-deployment/scripts/*.sh
 
 echo "=== Starting deployment ==="

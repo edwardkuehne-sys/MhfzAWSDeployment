@@ -1,0 +1,12 @@
+[Unit]
+Description=Update MHFZ IP and start server
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/mhfz-deployment/scripts/update-ip.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
