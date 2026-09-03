@@ -48,13 +48,12 @@ Resources:
       InternetGatewayId: !Ref MhfzInternetGateway
       VpcId: !Ref MhfzVPC
 
-  # 4. Public Subnet
+  # 4. Subnet
   MhfzPublicSubnet:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref MhfzVPC
       CidrBlock: 10.0.1.0/24
-      AvailabilityZone: eu-west-1a
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
