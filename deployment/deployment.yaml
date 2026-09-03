@@ -3,7 +3,6 @@ Description: >
   Simple Erupe Monster Hunter Frontier server deployment.
   EC2 runs Docker Compose with Erupe and PostgreSQL.
 
-#TODO finish parameterising EC2 size, EBS size, maybe keypairname, subnet AZ, Cidr IP for ssh
 Parameters:
   # Latest Debian Image
   DebianAMI:
@@ -95,7 +94,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          CidrIp: !sub '${AdminIp}/32'
+          CidrIp: !Sub '${AdminIp}/32'
 
         # MHFZ Sign V1
         - IpProtocol: tcp
