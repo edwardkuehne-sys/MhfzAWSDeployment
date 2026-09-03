@@ -9,9 +9,18 @@ Parameters:
   DebianAMI:
     Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
     Default: /aws/service/debian/release/13/latest/amd64
+    Description: Name of the image used for the deployment
   MhfzDataBucketName:
     Type: String
     Default: my-mhfz-server-data
+    Description: Name of the bucket that hosts the server's binaries and the serverless webapp
+  AdminIp:
+    Type: String
+    Description: IP address allowed to access SSH
+  KeyPairName:
+    Type: String
+    Default: MhfzKeyPair
+    Description: Name of the key pair in AWS used for SSH
 
 Resources:
   # 1. VPC
@@ -26,7 +35,7 @@ Resources:
           Value: MhfzVPC
 
   # 2. Internet Gateway
-  InternetGateway:
+  MhfzInternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
@@ -34,14 +43,14 @@ Resources:
           Value: MhfzInternetGateway
   
   # 3. Attach Gateway to VPC
-  VPCGatewayAttachment:
+  MhfzVPCGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
-      InternetGatewayId: !Ref InternetGateway
+      InternetGatewayId: !Ref MhfzInternetGateway
       VpcId: !Ref MhfzVPC
 
   # 4. Public Subnet
-  PublicSubnet:
+  MhfzPublicSubnet:
     Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref MhfzVPC
@@ -50,32 +59,32 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: PublicSubnet
+          Value: MhfzPublicSubnet
 
   # 5. Route table
-  PublicRouteTable:
+  MhfzPublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref MhfzVPC
   
   # 6. Route traffic through Gateway
-  DefaultRoute:
+  MhfzDefaultRoute:
     Type: AWS::EC2::Route
-    DependsOn: VPCGatewayAttachment
+    DependsOn: MhfzVPCGatewayAttachment
     Properties:
-      RouteTableId: !Ref PublicRouteTable
+      RouteTableId: !Ref MhfzPublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref InternetGateway
+      GatewayId: !Ref MhfzInternetGateway
   
   # 7. Associate subnet with route table
-  PublicSubnetRouteTableAssociation:
+  MhfzPublicSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PublicSubnet
-      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref MhfzPublicSubnet
+      RouteTableId: !Ref MhfzPublicRouteTable
 
   # 8. Security group
-  WebSecurityGroup:
+  MhfzSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: MHFZ Server Access
@@ -86,7 +95,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          CidrIp: 212.100.44.146/32
+          CidrIp: !sub '${AdminIp}/32'
 
         # MHFZ Sign V1
         - IpProtocol: tcp
@@ -124,10 +133,10 @@ Resources:
             VolumeSize: 12
             VolumeType: gp3
             DeleteOnTermination: true
-      SubnetId: !Ref PublicSubnet
+      SubnetId: !Ref MhfzPublicSubnet
       SecurityGroupIds:
-        - !Ref WebSecurityGroup
-      KeyName: MhfzKeyPair
+        - !Ref MhfzSecurityGroup
+      KeyName: !Ref KeyPairName
       
       IamInstanceProfile: !Ref MhfzInstanceProfile
 
@@ -193,4 +202,4 @@ Resources:
 Outputs:
   PublicIP:
     Description: Public IP of the MHFZ Server for Ansible
-    Value: !GetAtt EC2Instance.PublicIp
+    Value: !GetAtt MhfzServer.PublicIp
