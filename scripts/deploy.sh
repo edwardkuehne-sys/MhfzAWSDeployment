@@ -11,10 +11,14 @@ git checkout 531b3d2fa6af9b102f775d1630360605abc0ac67
 
 echo "=== Configuring Erupe ==="
 # Replace their server image with my own
+echo "=== Replacing local build in docker compose with prebuilt image ==="
 sed -i '/^    build:$/,+1c\
-    image: anononetwothree/mhfz-erupe:latest' ~/mhfz/erupe/docker/docker-compose.yml
+    image: anononetwothree/mhfz-erupe:stable' ~/mhfz/erupe/docker/docker-compose.yml
 
-echo "=== Setting up Config ==="
+echo "=== Replacing sql file in init script ==="
+cp /opt/mhfz-deployment/db/init.sql ~/mhfz/erupe/schemas/init.sql
+
+echo "=== Retrieving public IPv4 for config ==="
 TOKEN=$(curl -sS -X PUT \
   -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" \
   http://169.254.169.254/latest/api/token)
@@ -23,11 +27,12 @@ PUBLIC_IP=$(curl -sS --fail \
   -H "X-aws-ec2-metadata-token: $TOKEN" \
   http://169.254.169.254/latest/meta-data/public-ipv4)
 
-echo "Public IPv4: [$PUBLIC_IP]"
-
+echo "=== Inserting public IPv4 into config ==="
 sed "s/PUBLIC_IP/$PUBLIC_IP/g" \
   /opt/mhfz-deployment/config/config.json \
   > ~/mhfz/erupe/docker/config.json
+
+echo "== Configuration successful ==="
 
 echo "=== Extracting MHFZ binaries ==="
 # Download the permanent game binaries from S3
